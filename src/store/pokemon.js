@@ -1,5 +1,5 @@
 import { LOAD_ITEMS, REMOVE_ITEM, ADD_ITEM } from './items';
-
+import fixMoves from './fixmoves'
 const LOAD = 'pokemon/LOAD';
 const LOAD_TYPES = 'pokemon/LOAD_TYPES';
 const ADD_ONE = 'pokemon/ADD_ONE';
@@ -53,7 +53,9 @@ const pokemonReducer = (state = initialState, action) => {
     case LOAD: 
       const allPokemon = {};
       action.list.forEach(pokemon => {
-        allPokemon[pokemon.id] = pokemon;
+        allPokemon[pokemon.id] = pokemon //fixMoves(pokemon);
+        console.log("🚀 ~ file: pokemon.js:57 ~ pokemonReducer ~ pokemon:", pokemon)
+      
       });
       return {
         ...allPokemon,
@@ -73,6 +75,7 @@ const pokemonReducer = (state = initialState, action) => {
         };
         const pokemonList = newState.list.map(id => newState[id]);
         pokemonList.push(action.pokemon);
+        console.log("🚀 ~ file: pokemon.js:78 ~ pokemonReducer ~ pokemon:", action.pokemon)
         newState.list = sortList(pokemonList);
         return newState;
       }
