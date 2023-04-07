@@ -16,7 +16,7 @@ const PokemonBrowser = () => {
   const pokemon = useSelector(state => {
     return state.pokemon.list.map(pokemonId => state.pokemon[pokemonId]);
   });
-  console.log("🚀 ~ file: PokemonBrowser.js:14 ~ pokemon ~ pokemon:", pokemon)
+  console.log("🚀 ~ file: PokemonBrowser.js:14 ~ pokemon ~ pokemon:")
   const [showForm, setShowForm] = useState(false);
 
 

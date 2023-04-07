@@ -3,6 +3,7 @@ import fixMoves from './fixmoves'
 const LOAD = 'pokemon/LOAD';
 const LOAD_TYPES = 'pokemon/LOAD_TYPES';
 const ADD_ONE = 'pokemon/ADD_ONE';
+//const CREATE = 'pokemon/CREATE';
 
 const load = list => ({
   type: LOAD,
@@ -18,6 +19,18 @@ const addOnePokemon = pokemon => ({
   type: ADD_ONE,
   pokemon
 });
+
+
+
+export const addPokemon = (id) => async dispatch => {
+  console.log("🚀 ~ file: pokemon.js:26 ~ addingPokemon to store ~ id:", id)
+  const response = await fetch(`/api/pokemon/${id}`);
+
+  if (response.ok) {
+    const pokemon = await response.json();
+    dispatch(addOnePokemon(pokemon));
+  }
+};
 
 export const getPokemon = () => async dispatch => {
   const response = await fetch(`/api/pokemon`);
@@ -36,6 +49,41 @@ export const getPokemonTypes = () => async dispatch => {
     dispatch(loadTypes(types));
   }
 };
+export const createPokemonThunk = (pokemon) => async dispatch => {
+  const response = await fetch(`/api/pokemon`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(pokemon)
+    }
+  );
+  if (response.ok) {
+    const pokemon = await response.json();
+    dispatch(addOnePokemon(pokemon));
+    return pokemon; // probably dispatch thunk return goes to dispatch return
+  }
+};
+
+export const editPokemonThunk = (pokemon) => async dispatch => {
+  const response = await fetch(`/api/pokemon/${pokemon.id}`,
+    {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(pokemon)
+    }
+  );
+  if (response.ok) {
+    const pokemon = await response.json();
+    dispatch(addOnePokemon(pokemon));
+    return pokemon; // probably dispatch thunk return goes to dispatch return
+  }
+
+}
+
 
 const initialState = {
   list: [],
@@ -50,31 +98,30 @@ const sortList = (list) => {
 
 const pokemonReducer = (state = initialState, action) => {
   switch (action.type) {
-    case LOAD: 
+    case LOAD:
       const allPokemon = {};
       action.list.forEach(pokemon => {
-        allPokemon[pokemon.id] = pokemon //fixMoves(pokemon);
-        console.log("🚀 ~ file: pokemon.js:57 ~ pokemonReducer ~ pokemon:", pokemon)
-      
+        allPokemon[pokemon.id] = fixMoves(pokemon);
+        //console.log("🚀 ~ file: pokemon.js:57 ~ pokemonReducer ~ pokemon:", pokemon)      
       });
       return {
         ...allPokemon,
         ...state,
         list: sortList(action.list)
       };
-    case LOAD_TYPES: 
+    case LOAD_TYPES:
       return {
         ...state,
         types: action.types
       };
-    case ADD_ONE: 
+    case ADD_ONE:
       if (!state[action.pokemon.id]) {
         const newState = {
           ...state,
-          [action.pokemon.id]: action.pokemon
+          [action.pokemon.id]: fixMoves(action.pokemon)
         };
         const pokemonList = newState.list.map(id => newState[id]);
-        pokemonList.push(action.pokemon);
+        pokemonList.push(fixMoves(action.pokemon));
         console.log("🚀 ~ file: pokemon.js:78 ~ pokemonReducer ~ pokemon:", action.pokemon)
         newState.list = sortList(pokemonList);
         return newState;
@@ -83,10 +130,10 @@ const pokemonReducer = (state = initialState, action) => {
         ...state,
         [action.pokemon.id]: {
           ...state[action.pokemon.id],
-          ...action.pokemon
+          ...fixMoves(action.pokemon)
         }
       };
-    case LOAD_ITEMS: 
+    case LOAD_ITEMS:
       return {
         ...state,
         [action.pokemonId]: {
