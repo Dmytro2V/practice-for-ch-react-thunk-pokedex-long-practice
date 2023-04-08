@@ -45,6 +45,7 @@ const EditPokemonForm = ({ pokemon, hideForm }) => {
      };
     
     let updatedPokemon = dispatch(editPokemonThunk(payload))
+    
     if (updatedPokemon) {
       hideForm();
     }

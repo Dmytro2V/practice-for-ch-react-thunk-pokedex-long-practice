@@ -6,6 +6,7 @@ import EditPokemonForm from './EditPokemonForm';
 import ItemForm from './ItemForm';
 import {addPokemon} from '../store/pokemon'
 
+
 const PokemonDetail = () => {
   const { pokemonId } = useParams();
   const pokemon = useSelector(state => state.pokemon[pokemonId]);
@@ -17,7 +18,7 @@ const PokemonDetail = () => {
     setShowEditPokeForm(false);
     setEditItemId(null);
     dispatch(addPokemon(pokemonId))
-  }, [,dispatch, pokemonId]);
+  }, [dispatch, pokemonId]);
 
   if (!pokemon || !pokemon.moves) {
     return null;
@@ -70,7 +71,9 @@ const PokemonDetail = () => {
         <div>
           <h2>
             Items 
-            <button> + </button>
+            {pokemon.captured &&
+              <button onClick={() => setEditItemId('add mode')}> + </button>
+            }
           </h2>
           <table>
             <thead>

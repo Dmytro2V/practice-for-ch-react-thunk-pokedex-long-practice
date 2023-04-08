@@ -20,8 +20,6 @@ const addOnePokemon = pokemon => ({
   pokemon
 });
 
-
-
 export const addPokemon = (id) => async dispatch => {
   console.log("🚀 ~ file: pokemon.js:26 ~ addingPokemon to store ~ id:", id)
   const response = await fetch(`/api/pokemon/${id}`);
@@ -63,7 +61,7 @@ export const createPokemonThunk = (pokemon) => async dispatch => {
     const pokemon = await response.json();
     dispatch(addOnePokemon(pokemon));
     return pokemon; // probably dispatch thunk return goes to dispatch return
-  }
+  } else return false
 };
 
 export const editPokemonThunk = (pokemon) => async dispatch => {
@@ -80,7 +78,7 @@ export const editPokemonThunk = (pokemon) => async dispatch => {
     const pokemon = await response.json();
     dispatch(addOnePokemon(pokemon));
     return pokemon; // probably dispatch thunk return goes to dispatch return
-  }
+  } else return false
 
 }
 

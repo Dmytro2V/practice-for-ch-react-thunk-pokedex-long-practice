@@ -53,8 +53,8 @@ const CreatePokemonForm = ({ hideForm }) => {
      
 
     let createdPokemon =  dispatch(createPokemonThunk(payload))
-    console.log("🚀 ~ file: CreatePokemonForm.js:56 ~ handleSubmit ~ createdPokemon:", createdPokemon)
-
+    console.log("🚀 ~ file: CreatePokemonForm.js:56 ~ handleSubmit ~ createdPokemon:", createdPokemon)  
+    console.log("🚀 ~ file: CreatePokemonForm.js:58 ~ handleSubmit ~ createdPokemon == fals:", createdPokemon == false)
     if (createdPokemon) {
       history.push(`/pokemon/${createdPokemon.id}`);
       hideForm();
